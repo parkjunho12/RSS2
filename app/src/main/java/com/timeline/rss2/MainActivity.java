@@ -5,14 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -24,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +47,13 @@ public class MainActivity extends AppCompatActivity {
     private boolean isLink =false;
     private boolean isdate =false;
     private boolean isdesc =false;
+    private ArrayList<Feed> RSSList = null;
+    private Feed feed =null;
+    private RecyclerView recyclerView;
+
+
+
+
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -65,12 +79,22 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BottomNavigationView nav = (BottomNavigationView) findViewById(R.id.nav_view);
         nav.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
+        recyclerView =(RecyclerView) findViewById(R.id.home_recycle);
+        recyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
         BackgroundTask backgroundTask = new BackgroundTask();
         backgroundTask.execute();
     }
@@ -89,10 +113,12 @@ public class MainActivity extends AppCompatActivity {
                     switch (eventType){
 
                         case XmlPullParser.START_DOCUMENT:
+                            RSSList = new ArrayList<Feed>();
                             break;
                         case XmlPullParser.START_TAG:
                             tagname = parser.getName();
                             if(tagname.equals("item")){
+                                feed = new Feed();
                                 isItem =true;
                             }
                             else if (tagname.equalsIgnoreCase("media:content")){
@@ -102,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                                         String thumbnailUrl = parser.getAttributeValue(null, "url");
                                         imgsrc = thumbnailUrl;
                                         Log.d("---------media--------", imgsrc);
-
+                                       feed.setImgurl(imgsrc);
                                     }
 
                             }
@@ -114,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
                                         isTitle =true;
                                         title =parser.getText();
                                         Log.d("--------title--------",title);
+                                        feed.setTitle(title);
                                     }
                                 }
                                 if(tagname.equals("pubDate")){
@@ -121,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                                         isdate =true;
                                         pubdate = parser.getText();
                                         Log.d("--------date------",pubdate);
+                                       feed.setPubdate(pubdate);
 
                                     }
                                 }
@@ -130,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                                             desc = parser.getText();
                                             desc = desc.substring(desc.lastIndexOf(">")+1);
                                             Log.d("--------desc---------",desc);
+                                           feed.setContent(desc);
                                         }
                                     }
                                     if(tagname.equals("link")){
@@ -137,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
                                             isLink = true;
                                             link =parser.getText();
                                             Log.d("---------link--------",link);
+                                            feed.setLink(link);
 
                                         }
                                 }
@@ -147,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
                             tagname =parser.getName();
 
                             if(tagname.equals("item") ){
+                               RSSList.add(feed);
                                 ismedia =false;
                                 isItem =false;
                                 isTitle =false;
@@ -175,6 +206,18 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             return null;
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            RSSfeedAdapter adapter = new RSSfeedAdapter(getApplicationContext(), RSSList);
+            recyclerView.setAdapter(adapter);
+            adapter.setOnItemClickListener(new RSSfeedAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View v, int pos) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(RSSList.get(pos).link)));
+                }
+            });
         }
     }
 
