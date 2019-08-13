@@ -1,17 +1,32 @@
 package com.timeline.rss2;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class RSSfeedAdapter extends RecyclerView.Adapter<RSSfeedAdapter.MyViewHolder> {
@@ -48,8 +63,28 @@ private View mview;
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
     holder.title.setText(mlist.get(position).Title);
     holder.Pubdate.setText(mlist.get(position).Pubdate);
-    holder.content.setText(mlist.get(position).Content.substring(0,45)+"...");
-    holder.webView.loadUrl(mlist.get(position).imgurl);
+
+    if(mlist.get(position).Content.length()>=45)
+    {
+        holder.content.setText(mlist.get(position).Content.substring(0, 45) + "...");
+    }
+    else
+        {
+            holder.content.setText(mlist.get(position).Content);
+        }
+
+
+   // holder.webView.loadUrl(mlist.get(position).imgurl);
+        if(mlist.get(position).imgurl.isEmpty())
+        {
+
+        }
+        else {
+            new DownloadImageTask(holder.imageView).execute(mlist.get(position).imgurl);
+        }
+
+        holder.index.setText(String.valueOf(position+1));
+
 
     holder.mview.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -61,6 +96,30 @@ private View mview;
         }
     });
 
+    }
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+               // LogUtil.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 
 
@@ -74,15 +133,18 @@ private View mview;
     private TextView title;
     private TextView content;
     private TextView Pubdate;
-        public final View mview;
-    private WebView webView;
+    public final View mview;
+    private ImageView imageView;
+    private TextView index;
         public MyViewHolder(View itemView) {
             super(itemView);
             mview = itemView;
+            index = itemView.findViewById(R.id.index);
             title = itemView.findViewById(R.id.title);
             content =itemView.findViewById(R.id.content);
             Pubdate = itemView.findViewById(R.id.date);
-            webView =itemView.findViewById(R.id.webview);
+            imageView = itemView.findViewById(R.id.webview);
+           // webView =itemView.findViewById(R.id.webview);
         }
     }
 }
