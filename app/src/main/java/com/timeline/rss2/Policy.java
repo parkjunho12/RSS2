@@ -32,12 +32,12 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link homefragment.OnFragmentInteractionListener} interface
+ * {@link Policy.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link homefragment#newInstance} factory method to
+ * Use the {@link Policy#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class homefragment extends Fragment {
+public class Policy extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -47,8 +47,8 @@ public class homefragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private RecyclerView recyclerView;
-    private OnFragmentInteractionListener mListener;
-    public static String urlinfo = "http://rss.donga.com/total.xml";
+    private Policy.OnFragmentInteractionListener mListener;
+    String urlinfo = "http://rss.donga.com/politics.xml";
     private String tagname ="";
     private String title ="";
     private String desc="";
@@ -63,7 +63,7 @@ public class homefragment extends Fragment {
     private boolean isdesc =false;
     private ArrayList<Feed> RSSList = null;
     private Feed feed =null;
-    public homefragment() {
+    public Policy() {
         // Required empty public constructor
     }
 
@@ -76,8 +76,8 @@ public class homefragment extends Fragment {
      * @return A new instance of fragment homefragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static homefragment newInstance(String param1, String param2) {
-        homefragment fragment = new homefragment();
+    public static Policy newInstance(String param1, String param2) {
+        Policy fragment = new Policy();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -115,7 +115,7 @@ public class homefragment extends Fragment {
 
 
 
-        BackgroundTask backgroundTask = new BackgroundTask();
+        Policy.BackgroundTask backgroundTask = new Policy.BackgroundTask();
         backgroundTask.execute();
         return view;
     }
