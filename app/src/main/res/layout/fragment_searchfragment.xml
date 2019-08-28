@@ -3,9 +3,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="#ffffff"
     tools:context=".searchfragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    >
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:hint="원하는 뉴스를 구독하려면 검색하세요."
+        android:id="@+id/search_news"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
 
 
+</LinearLayout>
+<ListView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/search_list"
+    android:divider="#999999"
+    android:dividerHeight="1dp">
+
+</ListView>
+</LinearLayout>
 
 </FrameLayout>

@@ -4,7 +4,10 @@
     <string-array name="donga">
         <item>최신뉴스</item>
         <item>정치</item>
-
+        <item>사회</item>
+        <item>경제</item>
+        <item>문화연예</item>
+        <item>스포츠</item>
     </string-array>
 
 </resources>

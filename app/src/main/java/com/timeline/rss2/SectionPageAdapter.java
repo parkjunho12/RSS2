@@ -22,9 +22,25 @@ public class SectionPageAdapter extends FragmentPagerAdapter {
         }
         else if(title.equals("최신뉴스"))
         {
-            urlinfo ="http://rss.donga.com/total.xml";
+          fragment = new homefragment();
         }
-        mFragmentList.add(fragment);
+        else if(title.equals("사회"))
+        {
+            fragment = new Social();
+        }
+        else if(title.equals("문화연예"))
+        {
+            fragment = new CultureEntertainment();
+        }
+        else if(title.equals("경제"))
+        {
+            fragment = new Economy();
+        }
+        else if(title.equals("스포츠"))
+        {
+            fragment = new Sports();
+        }
+       mFragmentList.add(fragment);
         mFragmentTitleList.add(title);
 
     }
