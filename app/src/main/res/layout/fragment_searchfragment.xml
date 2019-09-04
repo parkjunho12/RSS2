@@ -19,7 +19,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:hint="원하는 뉴스를 구독하려면 검색하세요."
+        android:hint="@string/hint"
         android:id="@+id/search_news"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"/>

@@ -1,6 +1,7 @@
 package com.timeline.rss2;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -9,6 +10,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.sql.SQLException;
 
 
 /**
@@ -66,7 +70,28 @@ public class MyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my, container, false);
+        View view = inflater.inflate(R.layout.fragment_my, container, false);
+        TextView textView = (TextView) view.findViewById(R.id.testt);
+        DbOpenHelper dbOpenHelper = new DbOpenHelper(getContext());
+        Cursor c = null;
+        String result = null;
+        try {
+            dbOpenHelper.open();
+            c = dbOpenHelper.selectColumns();
+
+            while(c.moveToNext()) {
+                result = result + c.getString(c.getColumnIndex("구독"));
+            }
+            dbOpenHelper.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+            textView.setText(result);
+
+
+
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
