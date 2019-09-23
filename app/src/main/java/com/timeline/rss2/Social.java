@@ -1,7 +1,6 @@
 package com.timeline.rss2;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,11 +11,14 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.material.tabs.TabLayout;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -42,13 +44,14 @@ public class Social extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    static String urlinfo;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private RecyclerView recyclerView;
     private Policy.OnFragmentInteractionListener mListener;
-    String urlinfo = "http://rss.donga.com/national.xml";
+
     private String tagname ="";
     private String title ="";
     private String desc="";
@@ -63,6 +66,7 @@ public class Social extends Fragment {
     private boolean isdesc =false;
     private ArrayList<Feed> RSSList = null;
     private Feed feed =null;
+
     public Social() {
         // Required empty public constructor
     }
@@ -76,11 +80,10 @@ public class Social extends Fragment {
      * @return A new instance of fragment homefragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static Social newInstance(String param1, String param2) {
+    public static Social newInstance(String param1) {
         Social fragment = new Social();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -89,8 +92,8 @@ public class Social extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            urlinfo = getArguments().getString(ARG_PARAM1);
+            Log.e("슈바라랄",urlinfo);
         }
     }
 
@@ -99,8 +102,8 @@ public class Social extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =inflater.inflate(R.layout.fragment_homefragment, container, false);
 
+        View view =inflater.inflate(R.layout.fragment_homefragment, container, false);
         recyclerView =(RecyclerView) view.findViewById(R.id.home_recycle);
         recyclerView.setHasFixedSize(true);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext().getApplicationContext(), new LinearLayoutManager(getContext()).getOrientation());
@@ -110,14 +113,16 @@ public class Social extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         int i;
+        Log.e(urlinfo, "온크리에이트");
         String[] news = getResources().getStringArray(R.array.donga);
+        doingBack();
 
+        return view;
+    }
 
-
-
+    public void doingBack(){
         Social.BackgroundTask backgroundTask = new Social.BackgroundTask();
         backgroundTask.execute();
-        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -126,7 +131,8 @@ public class Social extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-    class BackgroundTask extends AsyncTask<String,Void,String> {
+     class BackgroundTask extends AsyncTask<String,Void,String> {
+        private String urlin = "";
 
         @SuppressLint("WrongThread")
         @Override
@@ -240,14 +246,17 @@ public class Social extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            RSSfeedAdapter adapter = new RSSfeedAdapter(getContext().getApplicationContext(), RSSList);
-            recyclerView.setAdapter(adapter);
-            adapter.setOnItemClickListener(new RSSfeedAdapter.OnItemClickListener() {
+            RSSfeedAdapter rssadapter = new RSSfeedAdapter(getContext().getApplicationContext(), RSSList);
+            Log.e(urlinfo,"durl");
+            recyclerView.setAdapter(rssadapter);
+            rssadapter.setOnItemClickListener(new RSSfeedAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View v, int pos) {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(RSSList.get(pos).link)));
                 }
             });
+
+
         }
     }
 
@@ -258,18 +267,5 @@ public class Social extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+
 }

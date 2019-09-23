@@ -1,7 +1,6 @@
 package com.timeline.rss2;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -40,13 +39,14 @@ import java.util.ArrayList;
 public class CultureEntertainment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    static String urlinfo;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private RecyclerView recyclerView;
     private Policy.OnFragmentInteractionListener mListener;
-    String urlinfo = "http://rss.donga.com/culture.xml";
+
     private String tagname ="";
     private String title ="";
     private String desc="";
@@ -63,6 +63,7 @@ public class CultureEntertainment extends Fragment {
     private Feed feed =null;
     public CultureEntertainment() {
         // Required empty public constructor
+
     }
 
     /**

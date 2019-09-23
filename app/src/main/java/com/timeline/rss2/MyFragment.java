@@ -7,12 +7,14 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 /**
@@ -28,7 +30,7 @@ public class MyFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    public  static ArrayList<String> arrayList;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -74,18 +76,21 @@ public class MyFragment extends Fragment {
         TextView textView = (TextView) view.findViewById(R.id.testt);
         DbOpenHelper dbOpenHelper = new DbOpenHelper(getContext());
         Cursor c = null;
+        arrayList = new ArrayList<String>();
         String result = null;
         try {
             dbOpenHelper.open();
             c = dbOpenHelper.selectColumns();
 
             while(c.moveToNext()) {
-                result = result + c.getString(c.getColumnIndex("구독"));
+                result =  c.getString(c.getColumnIndex("구독"));
+               arrayList.add(result);
             }
             dbOpenHelper.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
             textView.setText(result);
 
 

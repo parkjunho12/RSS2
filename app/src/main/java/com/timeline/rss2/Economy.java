@@ -1,7 +1,6 @@
 package com.timeline.rss2;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -48,7 +47,6 @@ public class Economy extends Fragment {
     private String mParam2;
     private RecyclerView recyclerView;
     private Policy.OnFragmentInteractionListener mListener;
-    String urlinfo = "http://rss.donga.com/economy.xml";
     private String tagname ="";
     private String title ="";
     private String desc="";
@@ -63,8 +61,11 @@ public class Economy extends Fragment {
     private boolean isdesc =false;
     private ArrayList<Feed> RSSList = null;
     private Feed feed =null;
+
+    static String urlinfo = MainActivity.NEWS.get(3);
     public Economy() {
         // Required empty public constructor
+
     }
 
     /**

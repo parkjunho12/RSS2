@@ -1,57 +1,41 @@
 package com.timeline.rss2;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
-import android.content.ClipData;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TableLayout;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
+import com.timeline.rss2.Social.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
-
-
+public class MainActivity extends AppCompatActivity  {
+    public static Context mcontext;
+    public static ArrayList<String> NEWS = null;
     private RecyclerView recyclerView;
-    private ViewPager mViewPager;
+    public ViewPager mViewPager;
     SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
     private TabLayout tabLayout;
-
-
+    private ArrayList<String> arrayList;
+    private ArrayAdapter<String> arrayAdapter;
+    private Spinner spinner;
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -82,6 +66,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mcontext = this;
+
+        NEWS = new ArrayList<>();
+        NEWS.clear();
+        String[] news = getResources().getStringArray(R.array.dongailbo);
+        for(int j=0;j<news.length;j++){
+            NEWS.add(news[j]);
+        }
+
+
+
         DbOpenHelper dbOpenHelper = new DbOpenHelper(this);
         try {
             dbOpenHelper.open();
@@ -90,31 +85,149 @@ public class MainActivity extends AppCompatActivity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        BottomNavigationView nav = (BottomNavigationView) findViewById(R.id.nav_view);
+        final BottomNavigationView nav = (BottomNavigationView) findViewById(R.id.nav_view);
         nav.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
 
         mViewPager = (ViewPager) findViewById(R.id.container);
-        setupViewPager(mViewPager);
 
          tabLayout = (TabLayout) findViewById(R.id.tabs);
          tabLayout.setupWithViewPager(mViewPager);
+        Cursor c = null;
+        arrayList = new ArrayList<>();
+        String result = null;
+        try {
+            dbOpenHelper.open();
+            c = dbOpenHelper.selectColumns();
+
+
+            while(c.moveToNext()) {
+                result =  c.getString(c.getColumnIndex("구독"));
+                arrayList.add(result);
+
+            }
+
+            dbOpenHelper.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //setupViewPager(mViewPager, "");
+        spinner = (Spinner) findViewById(R.id.spinner);
+
+        arrayAdapter = new ArrayAdapter<>(getApplicationContext(),R.layout.spinner_item,arrayList);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplication(),arrayList.get(i)+"가 선택되었습니다.",Toast.LENGTH_SHORT).show();
+
+                    setupViewPager(mViewPager, arrayList.get(i));
+//                if (arrayList.get(i).equals("세계일보")){
+//                    Social.newInstance("http://rss.segye.com/segye_society.xml","http://rss.segye.com/segye_society.xml").doingBack();
+//                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
     }
-    public void setupViewPager(ViewPager viewPager){
-        String[] news = getResources().getStringArray(R.array.donga);
 
+    public void setupViewPager(ViewPager viewPager,String newsi){
+       String[] news = getResources().getStringArray(R.array.donga);
+
+        String[] column = getResources().getStringArray(R.array.dongailbo);
+        if (newsi.equals("세계일보"))
+        {
+            column = getResources().getStringArray(R.array.segye);
+        }
+        else if(newsi.equals("동아일보")){
+            column = getResources().getStringArray(R.array.dongailbo);
+        }
+        else if(newsi.equals("경향닷컴")){
+            column = getResources().getStringArray(R.array.khan);
+        }
+        else if(newsi.equals("조선닷컴")){
+            column = getResources().getStringArray(R.array.chosun);
+        }
+        else if(newsi.equals("다음뉴스")){
+            column = getResources().getStringArray(R.array.daum);
+        }
+        else if(newsi.equals("헤럴드경제")){
+            column = getResources().getStringArray(R.array.herald);
+        }
+        else if(newsi.equals("매일경제")){
+            column = getResources().getStringArray(R.array.mail);
+        }
                 int i=0;
+                adapter.Clear();
 
                 for(i=0;i<news.length;i++)
                 {
+                       // Log.e(String.valueOf(i),newsi);
 
-                        adapter.addFragment(new homefragment(), news[i]);
+                    if(news[i].equals("최신뉴스")) {
 
+                                homefragment homefragment = new homefragment();
+                                homefragment.urlinfo = column[i];
+                                adapter.addFragment(homefragment, news[i],newsi);
+
+                        }
+                        else if(news[i].equals("정치")){
+
+                              Policy policy = new Policy();
+                                policy.urlinfo =column[i];
+                            adapter.addFragment(policy,news[i],newsi);
+
+
+                        }
+                        else if(news[i].equals("사회")) {
+
+                        Social social = new Social();
+                        social.urlinfo = column[i];
+                        adapter.addFragment(social, news[i], newsi);
+
+
+                            }
+                        else if(news[i].equals("경제")) {
+
+
+                        Economy economy = new Economy();
+                        economy.urlinfo = column[i];
+                        adapter.addFragment(economy, news[i], newsi);
+
+
+
+                        }else if(news[i].equals("문화연예")){
+
+                            CultureEntertainment cultureEntertainment = new CultureEntertainment();
+                            cultureEntertainment.urlinfo = column[i];
+                            adapter.addFragment(cultureEntertainment,news[i],newsi);
+
+                        }
+                        else if(news[i].equals("스포츠")){
+
+                            Sports sports = new Sports();
+                            sports.urlinfo = column[i];
+                            adapter.addFragment(sports,news[i],newsi);
+
+                        }
                 }
                 viewPager.setAdapter(adapter);
+                refresh();
     }
+    void refresh(){
+        adapter.notifyDataSetChanged();
+    }
+    @Override
+    protected void onResume() {
+        refresh();
+        super.onResume();
 
-
+    }
 
 
     private void replaceFrag(Fragment fragment)
@@ -125,4 +238,6 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.change_frag,fragment);
         transaction.commit();
     }
+
+
 }

@@ -166,20 +166,12 @@ public class searchfragment extends Fragment {
     }
     private void settingList(){
         list.add("동아일보");
-        list.add("시사인");
         list.add("경향닷컴");
-        list.add("MBC");
         list.add("조선닷컴");
-        list.add("중앙일보");
-        list.add("노컷뉴스");
-        list.add("동아닷컴");
         list.add("세계일보");
         list.add("매일경제");
         list.add("헤럴드경제");
-        list.add("연합뉴스");
         list.add("다음뉴스");
-        list.add("구글뉴스");
-
 
     }
 }

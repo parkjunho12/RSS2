@@ -9,5 +9,63 @@
         <item>문화연예</item>
         <item>스포츠</item>
     </string-array>
+    <string-array name="segye">
+        <item>http://rss.segye.com/segye_recent.xml</item>
+        <item>http://rss.segye.com/segye_politic.xml</item>
+        <item>http://rss.segye.com/segye_society.xml</item>
+        <item>http://rss.segye.com/segye_economy.xml</item>
+        <item>http://rss.segye.com/segye_entertainment.xml</item>
+        <item>http://rss.segye.com/segye_sports.xml</item>
+    </string-array>
+    <string-array name="dongailbo">
+        <item>http://rss.donga.com/total.xml</item>
+        <item>http://rss.donga.com/politics.xml</item>
+        <item>http://rss.donga.com/national.xml</item>
+        <item>http://rss.donga.com/economy.xml</item>
+        <item>http://rss.donga.com/culture.xml</item>
+        <item>http://rss.donga.com/sports.xml</item>
+    </string-array>
+    <string-array name="khan">
+    <item>http://www.khan.co.kr/rss/rssdata/total_news.xml</item>
+    <item>http://www.khan.co.kr/rss/rssdata/politic.xml</item>
+    <item>http://www.khan.co.kr/rss/rssdata/society.xml</item>
+    <item>http://www.khan.co.kr/rss/rssdata/economy.xml</item>
+    <item>http://www.khan.co.kr/rss/rssdata/kh_entertainment.xml</item>
+    <item>http://www.khan.co.kr/rss/rssdata/kh_sports.xml</item>
+</string-array>
+    <string-array name="chosun">
+        <item>http://www.chosun.com/site/data/rss/rss.xml</item>
+        <item>http://www.chosun.com/site/data/rss/politics.xml</item>
+        <item>http://newsplus.chosun.com/hitdata/xml/index/index.xml</item>
+        <item>http://biz.chosun.com/site/data/rss/policybank.xml</item>
+        <item>http://www.chosun.com/site/data/rss/ent.xml</item>
+        <item>http://www.chosun.com/site/data/rss/sports.xml</item>
+    </string-array>
+
+    <string-array name="mail">
+        <item>http://file.mk.co.kr/news/rss/rss_30000001.xml</item>
+        <item>http://file.mk.co.kr/news/rss/rss_30200030.xml</item>
+        <item>http://file.mk.co.kr/news/rss/rss_50400012.xml</item>
+        <item>http://file.mk.co.kr/news/rss/rss_30100041.xml</item>
+        <item>http://file.mk.co.kr/news/rss/rss_30000023.xml</item>
+        <item>http://file.mk.co.kr/news/rss/rss_50600001.xml</item>
+    </string-array>
+    <string-array name="herald">
+        <item>http://biz.heraldm.com/rss/010100000000.xml</item>
+        <item>http://biz.heraldm.com/rss/010108000000.xml</item>
+        <item>http://biz.heraldm.com/rss/010109000000.xml</item>
+        <item>http://biz.heraldm.com/rss/010104000000.xml</item>
+        <item>http://biz.heraldm.com/rss/010404000000.xml</item>
+        <item>http://biz.heraldm.com/rss/010410000000.xml</item>
+    </string-array>
+    <string-array name="daum">
+        <item>http://media.daum.net/rss/today/primary/all/rss2.xml</item>
+        <item>http://media.daum.net/rss/part/primary/politics/rss2.xml</item>
+        <item>http://media.daum.net/rss/part/primary/society/rss2.xml</item>
+        <item>http://media.daum.net/rss/part/primary/economic/rss2.xml</item>
+        <item>http://media.daum.net/rss/today/primary/entertain/rss2.xml</item>
+        <item>http://media.daum.net/rss/today/primary/sports/rss2.xml</item>
+    </string-array>
+
 
 </resources>
