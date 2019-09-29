@@ -112,10 +112,7 @@ public class MainActivity extends AppCompatActivity  {
             e.printStackTrace();
         }
         //setupViewPager(mViewPager, "");
-        spinner = (Spinner) findViewById(R.id.spinner);
-
-        arrayAdapter = new ArrayAdapter<>(getApplicationContext(),R.layout.spinner_item,arrayList);
-        spinner.setAdapter(arrayAdapter);
+        setupSpinner();
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -135,11 +132,20 @@ public class MainActivity extends AppCompatActivity  {
 
 
     }
+    public void setupSpinner()
+    {
+        spinner = (Spinner) findViewById(R.id.spinner);
+
+        arrayAdapter = new ArrayAdapter<>(getApplicationContext(),R.layout.spinner_item,arrayList);
+        spinner.setAdapter(arrayAdapter);
+
+    }
 
     public void setupViewPager(ViewPager viewPager,String newsi){
        String[] news = getResources().getStringArray(R.array.donga);
 
         String[] column = getResources().getStringArray(R.array.dongailbo);
+
         if (newsi.equals("세계일보"))
         {
             column = getResources().getStringArray(R.array.segye);
@@ -154,6 +160,7 @@ public class MainActivity extends AppCompatActivity  {
             column = getResources().getStringArray(R.array.chosun);
         }
         else if(newsi.equals("다음뉴스")){
+
             column = getResources().getStringArray(R.array.daum);
         }
         else if(newsi.equals("헤럴드경제")){
@@ -167,7 +174,7 @@ public class MainActivity extends AppCompatActivity  {
 
                 for(i=0;i<news.length;i++)
                 {
-                       // Log.e(String.valueOf(i),newsi);
+                        Log.e(String.valueOf(i),column[i]);
 
                     if(news[i].equals("최신뉴스")) {
 

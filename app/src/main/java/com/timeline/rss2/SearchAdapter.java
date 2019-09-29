@@ -3,27 +3,35 @@ package com.timeline.rss2;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import com.timeline.rss2.MainActivity;
 
 public class SearchAdapter extends BaseAdapter {
-    private Context context;
+     private Context context;
     private List<String> list;
     private LayoutInflater layoutInflater;
     private ViewHolder viewHolder;
-
+    private ArrayList<String> arrayList;
+    private ArrayAdapter<String> arrayAdapter;
     public SearchAdapter(Context context, List<String> list) {
         this.context = context;
         this.list = list;
@@ -94,6 +102,7 @@ public class SearchAdapter extends BaseAdapter {
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
+                        context.startActivities(new Intent[]{new Intent(context, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)});
 
                         Toast.makeText(context,"예를 선택했습니다.",Toast.LENGTH_LONG).show();
                     }

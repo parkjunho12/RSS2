@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.sql.SQLException;
 
 public class DbOpenHelper {
-    private static final String DATABASE_NAME = "InnerDatabase(SQLite).db";
+    private static final String DATABASE_NAME = "goodoc.db";
     private static final int DATABASE_VERSION = 1;
     public static SQLiteDatabase mDB;
     private DatabaseHelper mDBHelper;
@@ -51,6 +51,12 @@ public class DbOpenHelper {
         values.put(Database.CreateDB.PHONE, phonetoken);
         values.put(Database.CreateDB.Goodoc, Goodoc);
         return mDB.insert(Database.CreateDB._TABLENAME0, null, values);
+    }
+    public void deleteColumn(String phonetoken, String Goodoc){
+        mDB = mDBHelper.getWritableDatabase();
+        String sql ="DELETE FROM "+Database.CreateDB._TABLENAME0+" WHERE 구독='" + Goodoc + "';" ;
+        mDB.execSQL(sql);
+
     }
     public Cursor selectColumns(){
         return mDB.query(Database.CreateDB._TABLENAME0, null, null, null, null, null, null);

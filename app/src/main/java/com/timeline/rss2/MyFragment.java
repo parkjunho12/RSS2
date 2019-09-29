@@ -1,11 +1,17 @@
 package com.timeline.rss2;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +40,7 @@ public class MyFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private RecyclerView recyclerView;
     private OnFragmentInteractionListener mListener;
 
     public MyFragment() {
@@ -68,12 +74,22 @@ public class MyFragment extends Fragment {
         }
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my, container, false);
-        TextView textView = (TextView) view.findViewById(R.id.testt);
+
+        recyclerView = (RecyclerView)view.findViewById(R.id.myrecycle);
+
+        recyclerView.setHasFixedSize(true);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext().getApplicationContext(), new LinearLayoutManager(getContext()).getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext().getApplicationContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         DbOpenHelper dbOpenHelper = new DbOpenHelper(getContext());
         Cursor c = null;
         arrayList = new ArrayList<String>();
@@ -91,11 +107,26 @@ public class MyFragment extends Fragment {
             e.printStackTrace();
         }
 
-            textView.setText(result);
 
 
+        final MyAdapter myAdapter = new MyAdapter(getContext().getApplicationContext(), arrayList);
+        recyclerView.setAdapter(myAdapter);
 
+        myAdapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int pos) {
+                DbOpenHelper dbOpenHelper = new DbOpenHelper(getContext());
+                try {
+                    dbOpenHelper.open();
+                    dbOpenHelper.deleteColumn(arrayList.get(pos),arrayList.get(pos));
+                    dbOpenHelper.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                getContext().startActivities(new Intent[]{new Intent(getContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)});
 
+            }
+        });
         return view;
     }
 
